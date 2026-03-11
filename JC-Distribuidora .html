@@ -1,0 +1,2563 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1e3a8a">
+    <title>JC Distribuidora</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            background: #f5f5f5;
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .header h1 {
+            font-size: 22px;
+            font-weight: bold;
+        }
+        
+        .header p {
+            font-size: 11px;
+            opacity: 0.9;
+            margin-top: 3px;
+        }
+        
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            font-size: 11px;
+        }
+        
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        
+        .status-online {
+            background: #10b981;
+            color: white;
+        }
+        
+        .status-offline {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .status-sync {
+            background: #f59e0b;
+            color: white;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        /* Navigation */
+        .nav-tabs {
+            display: flex;
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        
+        .nav-tabs::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .nav-tab {
+            flex: 1;
+            padding: 12px 8px;
+            text-align: center;
+            background: none;
+            border: none;
+            font-size: 11px;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+            min-width: 70px;
+        }
+        
+        .nav-tab.active {
+            color: #1e3a8a;
+            border-bottom: 3px solid #1e3a8a;
+            background: #f0f4ff;
+        }
+        
+        .nav-tab i {
+            display: block;
+            font-size: 18px;
+            margin-bottom: 3px;
+        }
+        
+        .nav-tab .badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #ef4444;
+            color: white;
+            font-size: 9px;
+            padding: 2px 5px;
+            border-radius: 10px;
+        }
+        
+        /* Content Sections */
+        .content {
+            display: none;
+            padding: 15px;
+            padding-bottom: 100px;
+        }
+        
+        .content.active {
+            display: block;
+        }
+        
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .card-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #1e3a8a;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* Forms */
+        .form-group {
+            margin-bottom: 12px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: 600;
+            font-size: 13px;
+            color: #555;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: white;
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+            color: white;
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+            color: white;
+        }
+        
+        .btn-info {
+            background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+        
+        .btn:active {
+            transform: scale(0.98);
+        }
+        
+        .btn-small {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 6px;
+            font-size: 11px;
+            cursor: pointer;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .btn-edit {
+            background: #f59e0b;
+        }
+        
+        .btn-delete {
+            background: #ef4444;
+        }
+        
+        .btn-pay {
+            background: #10b981;
+        }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1e3a8a;
+        }
+        
+        .stat-label {
+            font-size: 11px;
+            color: #666;
+            margin-top: 3px;
+        }
+        
+        /* Lists */
+        .item-list {
+            list-style: none;
+        }
+        
+        .item-card {
+            background: white;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .item-info h3 {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 3px;
+        }
+        
+        .item-info p {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .item-actions {
+            display: flex;
+            gap: 5px;
+        }
+        
+        /* Login Screen */
+        .login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1e3a8a 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .login-box {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        .login-logo {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .login-logo h1 {
+            color: #1e3a8a;
+            font-size: 26px;
+        }
+        
+        .login-logo p {
+            color: #666;
+            margin-top: 8px;
+            font-size: 14px;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 14px;
+            z-index: 1001;
+            opacity: 0;
+            transition: opacity 0.3s;
+            max-width: 90%;
+            text-align: center;
+        }
+        
+        .toast.show {
+            opacity: 1;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .modal-header h2 {
+            color: #1e3a8a;
+            font-size: 18px;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        /* Cart Items */
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .quantity-btn {
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: #3b82f6;
+            color: white;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .total-section {
+            background: #1e3a8a;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            text-align: center;
+        }
+        
+        .total-section h3 {
+            font-size: 24px;
+        }
+        
+        /* Payment Options */
+        .payment-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .payment-option {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .payment-option.selected {
+            border-color: #1e3a8a;
+            background: #f0f4ff;
+        }
+        
+        .payment-option .icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .payment-option .label {
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        /* Installment Options */
+        .installment-options {
+            margin-top: 15px;
+        }
+        
+        .installment-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+        
+        .installment-option.selected {
+            border-color: #1e3a8a;
+            background: #f0f4ff;
+        }
+        
+        .installment-details {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        /* Client Card */
+        .client-card {
+            background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-left: 4px solid #1e3a8a;
+        }
+        
+        .client-card.danger {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            border-left-color: #ef4444;
+        }
+        
+        .client-card.warning {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border-left-color: #f59e0b;
+        }
+        
+        .debt-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        
+        .debt-high {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .debt-medium {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        .debt-low {
+            background: #10b981;
+            color: white;
+        }
+        
+        /* Sync Panel */
+        .sync-panel {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .sync-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .sync-item:last-child {
+            border-bottom: none;
+        }
+        
+        .sync-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+        }
+        
+        .sync-pending {
+            color: #f59e0b;
+        }
+        
+        .sync-done {
+            color: #10b981;
+        }
+        
+        .sync-error {
+            color: #ef4444;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: #999;
+        }
+        
+        .empty-state-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        
+        /* Parcel Card */
+        .parcel-card {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .parcel-card.paid {
+            background: #d1fae5;
+            opacity: 0.8;
+        }
+        
+        .parcel-card.overdue {
+            background: #fee2e2;
+            border: 1px solid #ef4444;
+        }
+        
+        .parcel-info {
+            flex: 1;
+        }
+        
+        .parcel-number {
+            font-weight: bold;
+            color: #1e3a8a;
+            font-size: 13px;
+        }
+        
+        .parcel-date {
+            font-size: 11px;
+            color: #666;
+        }
+        
+        .parcel-value {
+            font-weight: bold;
+            color: #059669;
+            font-size: 14px;
+        }
+        
+        /* Tabs */
+        .sub-tabs {
+            display: flex;
+            background: white;
+            border-radius: 8px;
+            padding: 4px;
+            margin-bottom: 15px;
+        }
+        
+        .sub-tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            border: none;
+            background: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+        }
+        
+        .sub-tab.active {
+            background: #1e3a8a;
+            color: white;
+        }
+        
+        /* Progress Bar */
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #059669);
+            transition: width 0.3s;
+        }
+        
+        .progress-fill.warning {
+            background: linear-gradient(90deg, #f59e0b, #d97706);
+        }
+        
+        .progress-fill.danger {
+            background: linear-gradient(90deg, #ef4444, #dc2626);
+        }
+        
+        /* Search Box */
+        .search-box {
+            position: relative;
+            margin-bottom: 15px;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 12px 40px 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 14px;
+        }
+        
+        .search-box button {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        
+        /* Filter Chips */
+        .filter-chips {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+        }
+        
+        .chip {
+            padding: 6px 12px;
+            border-radius: 15px;
+            border: 1px solid #ddd;
+            background: white;
+            font-size: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        
+        .chip.active {
+            background: #1e3a8a;
+            color: white;
+            border-color: #1e3a8a;
+        }
+        
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .animate-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .fab:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+    <!-- Tela de Login -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-box">
+            <div class="login-logo">
+                <h1>📦 JC Distribuidora</h1>
+                <p>Sistema Completo com Sincronização</p>
+            </div>
+            
+            <div id="loginForm">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="loginEmail" placeholder="seu@email.com" value="demo@jc.com">
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" id="loginPassword" placeholder="••••••" value="123456">
+                </div>
+                <button class="btn btn-primary" onclick="app.login()">
+                    Entrar
+                </button>
+                <button class="btn btn-success" onclick="app.showRegister()">
+                    Criar Nova Conta
+                </button>
+            </div>
+            
+            <div id="registerForm" class="hidden">
+                <div class="form-group">
+                    <label>Nome da Empresa</label>
+                    <input type="text" id="regCompany" placeholder="JC Distribuidora">
+                </div>
+                <div class="form-group">
+                    <label>Seu Nome</label>
+                    <input type="text" id="regName" placeholder="João Silva">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="regEmail" placeholder="seu@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres">
+                </div>
+                <button class="btn btn-success" onclick="app.register()">
+                    Cadastrar
+                </button>
+                <button class="btn btn-secondary" onclick="app.showLogin()">
+                    Voltar ao Login
+                </button>
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px; font-size: 12px; color: #999;">
+                <p>💡 Modo Demo: demo@jc.com | 123456</p>
+                <p style="margin-top: 5px;">🌐 Funciona offline e online</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- App Principal -->
+    <div id="mainApp" class="container hidden">
+        <!-- Header -->
+        <div class="header">
+            <h1>📦 JC Distribuidora</h1>
+            <p>Sistema de Gestão Completo</p>
+            <div class="user-info">
+                <span id="userName">Usuário</span>
+                <span id="connectionStatus" class="status-indicator status-online">
+                    🟢 Online
+                </span>
+                <span onclick="app.logout()" style="cursor: pointer;">🚪 Sair</span>
+            </div>
+        </div>
+        
+        <!-- Navegação -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="app.navigate('dashboard')">
+                📊<br>Resumo
+            </button>
+            <button class="nav-tab" onclick="app.navigate('clientes')">
+                👥<br>Clientes
+            </button>
+            <button class="nav-tab" onclick="app.navigate('estoque')">
+                📦<br>Estoque
+            </button>
+            <button class="nav-tab" onclick="app.navigate('vendas')">
+                💰<br>Vender
+            </button>
+            <button class="nav-tab" onclick="app.navigate('cobrancas')">
+                💳<br>Cobranças
+            </button>
+            <button class="nav-tab" onclick="app.navigate('sincronizar')">
+                🔄<br>Sync
+            </button>
+        </div>
+        
+        <!-- Dashboard -->
+        <div id="dashboard" class="content active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="statClientes">0</div>
+                    <div class="stat-label">Clientes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statProdutos">0</div>
+                    <div class="stat-label">Produtos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statVendasHoje">0</div>
+                    <div class="stat-label">Vendas Hoje</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statAReceber">R$0</div>
+                    <div class="stat-label">A Receber</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">⚠️ Alertas Importantes</div>
+                <div id="alertasDashboard">
+                    <div class="empty-state" style="padding: 20px;">
+                        <div class="empty-state-icon">✅</div>
+                        <p style="font-size: 13px;">Nenhum alerta no momento</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">📈 Vendas Recentes</div>
+                <div id="ultimasVendas">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🛒</div>
+                        <p>Sem vendas recentes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Clientes -->
+        <div id="clientes" class="content">
+            <button class="btn btn-success" onclick="app.openModal('clienteModal')">
+                ➕ Novo Cliente
+            </button>
+            
+            <div class="search-box">
+                <input type="text" id="searchCliente" placeholder="Buscar cliente..." onkeyup="app.filtrarClientes()">
+                <button>🔍</button>
+            </div>
+            
+            <div class="filter-chips">
+                <div class="chip active" onclick="app.filtrarClientesStatus('todos')">Todos</div>
+                <div class="chip" onclick="app.filtrarClientesStatus('devedores')" style="color: #ef4444;">Devedores</div>
+                <div class="chip" onclick="app.filtrarClientesStatus('adimplentes')" style="color: #10b981;">Adimplentes</div>
+            </div>
+            
+            <div id="listaClientes">
+                <div class="empty-state">
+                    <div class="empty-state-icon">👥</div>
+                    <p>Nenhum cliente cadastrado</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Estoque -->
+        <div id="estoque" class="content">
+            <button class="btn btn-success" onclick="app.openModal('produtoModal')">
+                ➕ Novo Produto
+            </button>
+            
+            <div class="search-box">
+                <input type="text" id="searchProduto" placeholder="Buscar produto..." onkeyup="app.filtrarProdutos()">
+                <button>🔍</button>
+            </div>
+            
+            <div id="listaProdutos">
+                <div class="empty-state">
+                    <div class="empty-state-icon">📦</div>
+                    <p>Nenhum produto cadastrado</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Vendas -->
+        <div id="vendas" class="content">
+            <div class="card">
+                <div class="card-title">🛒 Nova Venda</div>
+                
+                <div class="form-group">
+                    <label>Selecionar Cliente *</label>
+                    <select id="selectCliente" onchange="app.selecionarCliente()">
+                        <option value="">Cliente avulso...</option>
+                    </select>
+                </div>
+                
+                <div id="infoCliente" class="hidden" style="margin-bottom: 15px;">
+                    <div class="client-card">
+                        <strong id="nomeClienteSelecionado"></strong>
+                        <p id="limiteCliente" style="font-size: 12px; color: #666; margin-top: 3px;"></p>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Adicionar Produto</label>
+                    <select id="selectProduto" onchange="app.adicionarAoCarrinho()">
+                        <option value="">Selecione um produto...</option>
+                    </select>
+                </div>
+                
+                <div id="carrinho">
+                    <p style="color: #999; text-align: center; padding: 20px;">
+                        Carrinho vazio
+                    </p>
+                </div>
+                
+                <div class="total-section hidden" id="totalSection">
+                    <p>Total da Venda</p>
+                    <h3 id="totalVenda">R$ 0,00</h3>
+                </div>
+                
+                <div class="payment-options" id="paymentOptions">
+                    <div class="payment-option selected" onclick="app.selecionarPagamento('avista')" id="optAvista">
+                        <div class="icon">💵</div>
+                        <div class="label">À Vista</div>
+                    </div>
+                    <div class="payment-option" onclick="app.selecionarPagamento('prazo')" id="optPrazo">
+                        <div class="icon">💳</div>
+                        <div class="label">A Prazo</div>
+                    </div>
+                </div>
+                
+                <div id="parcelamentoOptions" class="hidden">
+                    <div class="form-group">
+                        <label>Número de Parcelas</label>
+                        <select id="numParcelas" onchange="app.calcularParcelas()">
+                            <option value="1">1x (À Vista)</option>
+                            <option value="2">2x</option>
+                            <option value="3">3x</option>
+                            <option value="4">4x</option>
+                            <option value="5">5x</option>
+                            <option value="6">6x</option>
+                            <option value="12">12x</option>
+                        </select>
+                    </div>
+                    <div id="previewParcelas" style="margin-top: 10px;"></div>
+                </div>
+                
+                <button class="btn btn-success" id="btnFinalizar" onclick="app.finalizarVenda()" disabled>
+                    ✅ Finalizar Venda
+                </button>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">🕐 Histórico de Vendas</div>
+                <div id="historicoVendas">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📋</div>
+                        <p>Sem vendas registradas</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Cobranças -->
+        <div id="cobrancas" class="content">
+            <div class="sub-tabs">
+                <button class="sub-tab active" onclick="app.mudarAbaCobranca('pendentes')">Pendentes</button>
+                <button class="sub-tab" onclick="app.mudarAbaCobranca('atrasadas')">Atrasadas</button>
+                <button class="sub-tab" onclick="app.mudarAbaCobranca('recebidas')">Recebidas</button>
+            </div>
+            
+            <div id="listaCobrancas">
+                <div class="empty-state">
+                    <div class="empty-state-icon">💳</div>
+                    <p>Nenhuma cobrança encontrada</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sincronização -->
+        <div id="sincronizar" class="content">
+            <div class="sync-panel">
+                <div class="card-title">🌐 Status da Conexão</div>
+                <div style="text-align: center; padding: 20px;">
+                    <div id="syncStatusIcon" style="font-size: 48px; margin-bottom: 10px;">🟢</div>
+                    <h3 id="syncStatusText">Online</h3>
+                    <p id="syncStatusDesc" style="color: #666; font-size: 13px; margin-top: 5px;">
+                        Sincronização automática ativa
+                    </p>
+                </div>
+                <button class="btn btn-primary" onclick="app.sincronizarManual()" id="btnSync">
+                    🔄 Sincronizar Agora
+                </button>
+            </div>
+            
+            <div class="sync-panel">
+                <div class="card-title">📊 Dados Locais</div>
+                <div class="sync-item">
+                    <span>Clientes</span>
+                    <span class="sync-status sync-done" id="countClientes">✓ 0 sincronizados</span>
+                </div>
+                <div class="sync-item">
+                    <span>Produtos</span>
+                    <span class="sync-status sync-done" id="countProdutos">✓ 0 sincronizados</span>
+                </div>
+                <div class="sync-item">
+                    <span>Vendas</span>
+                    <span class="sync-status sync-done" id="countVendas">✓ 0 sincronizados</span>
+                </div>
+                <div class="sync-item">
+                    <span>Pagamentos Pendentes</span>
+                    <span class="sync-status sync-done" id="countPagamentos">✓ 0 pendentes</span>
+                </div>
+            </div>
+            
+            <div class="sync-panel">
+                <div class="card-title">⏳ Fila de Sincronização</div>
+                <div id="filaSync">
+                    <div class="empty-state" style="padding: 20px;">
+                        <div class="empty-state-icon">✅</div>
+                        <p style="font-size: 13px;">Tudo sincronizado!</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card" style="background: #fef3c7; border: 1px solid #f59e0b;">
+                <div class="card-title" style="color: #92400e;">💡 Dicas de Uso Offline</div>
+                <ul style="font-size: 13px; color: #78350f; padding-left: 20px; line-height: 1.8;">
+                    <li>O app funciona normalmente sem internet</li>
+                    <li>Os dados são salvos no celular</li>
+                    <li>Quando voltar a internet, sincronize</li>
+                    <li>Não feche o app durante sincronização</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Cliente -->
+    <div id="clienteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="clienteModalTitle">Novo Cliente</h2>
+                <button class="close-btn" onclick="app.closeModal('clienteModal')">&times;</button>
+            </div>
+            
+            <input type="hidden" id="clienteId">
+            
+            <div class="form-group">
+                <label>Nome Completo *</label>
+                <input type="text" id="clienteNome" placeholder="Ex: João da Silva">
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>CPF/CNPJ</label>
+                    <input type="text" id="clienteDocumento" placeholder="000.000.000-00">
+                </div>
+                <div class="form-group">
+                    <label>Telefone *</label>
+                    <input type="tel" id="clienteTelefone" placeholder="(00) 00000-0000">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Endereço</label>
+                <input type="text" id="clienteEndereco" placeholder="Rua, número, bairro">
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Limite de Crédito (R$)</label>
+                    <input type="number" id="clienteLimite" placeholder="0,00" step="0.01" value="500">
+                </div>
+                <div class="form-group">
+                    <label>Prazo Máximo (dias)</label>
+                    <input type="number" id="clientePrazo" placeholder="30" value="30">
+                </div>
+            </div>
+            
+            <button class="btn btn-success" onclick="app.salvarCliente()">
+                💾 Salvar Cliente
+            </button>
+            <button class="btn btn-secondary" onclick="app.closeModal('clienteModal')">
+                Cancelar
+            </button>
+        </div>
+    </div>
+    
+    <!-- Modal Produto -->
+    <div id="produtoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="produtoModalTitle">Novo Produto</h2>
+                <button class="close-btn" onclick="app.closeModal('produtoModal')">&times;</button>
+            </div>
+            
+            <input type="hidden" id="produtoId">
+            
+            <div class="form-group">
+                <label>Nome do Produto *</label>
+                <input type="text" id="produtoNome" placeholder="Ex: Coca-Cola 2L">
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Código/SKU</label>
+                    <input type="text" id="produtoCodigo" placeholder="Ex: COCA002">
+                </div>
+                <div class="form-group">
+                    <label>Estoque Inicial *</label>
+                    <input type="number" id="produtoQuantidade" placeholder="0" min="0">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Preço de Custo (R$) *</label>
+                    <input type="number" id="produtoCusto" placeholder="0,00" step="0.01" min="0">
+                </div>
+                <div class="form-group">
+                    <label>Preço de Venda (R$) *</label>
+                    <input type="number" id="produtoPreco" placeholder="0,00" step="0.01" min="0">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Estoque Mínimo (alerta)</label>
+                <input type="number" id="produtoMinimo" placeholder="10" value="10" min="0">
+            </div>
+            
+            <button class="btn btn-success" onclick="app.salvarProduto()">
+                💾 Salvar Produto
+            </button>
+            <button class="btn btn-secondary" onclick="app.closeModal('produtoModal')">
+                Cancelar
+            </button>
+        </div>
+    </div>
+    
+    <!-- Modal Detalhes Venda -->
+    <div id="vendaModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2>Detalhes da Venda</h2>
+                <button class="close-btn" onclick="app.closeModal('vendaModal')">&times;</button>
+            </div>
+            
+            <div id="vendaDetalhes"></div>
+        </div>
+    </div>
+    
+    <!-- Modal Receber Pagamento -->
+    <div id="receberModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Receber Pagamento</h2>
+                <button class="close-btn" onclick="app.closeModal('receberModal')">&times;</button>
+            </div>
+            
+            <input type="hidden" id="receberParcelaId">
+            <input type="hidden" id="receberVendaId">
+            
+            <div id="receberInfo" style="margin-bottom: 15px;"></div>
+            
+            <div class="form-group">
+                <label>Valor Recebido (R$)</label>
+                <input type="number" id="valorRecebido" step="0.01">
+            </div>
+            
+            <div class="form-group">
+                <label>Data do Pagamento</label>
+                <input type="date" id="dataRecebimento">
+            </div>
+            
+            <div class="form-group">
+                <label>Forma de Pagamento</label>
+                <select id="formaRecebimento">
+                    <option value="dinheiro">Dinheiro</option>
+                    <option value="pix">PIX</option>
+                    <option value="cartao">Cartão</option>
+                    <option value="boleto">Boleto</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Observações</label>
+                <input type="text" id="obsRecebimento" placeholder="Opcional">
+            </div>
+            
+            <button class="btn btn-success" onclick="app.confirmarRecebimento()">
+                💰 Confirmar Recebimento
+            </button>
+            <button class="btn btn-secondary" onclick="app.closeModal('receberModal')">
+                Cancelar
+            </button>
+        </div>
+    </div>
+    
+    <!-- Toast -->
+    <div id="toast" class="toast"></div>
+
+    <script>
+        // IndexedDB para persistência offline
+        const DB_NAME = 'JCDistribuidoraDB';
+        const DB_VERSION = 1;
+        let db;
+        
+        // Aplicação Principal
+        const app = {
+            // Dados em memória
+            currentUser: null,
+            clientes: [],
+            produtos: [],
+            vendas: [],
+            carrinho: [],
+            pagamentos: [],
+            filaSync: [],
+            
+            // Estado
+            isOnline: navigator.onLine,
+            clienteSelecionado: null,
+            tipoPagamento: 'avista',
+            abaCobranca: 'pendentes',
+            
+            // Inicialização
+            async init() {
+                await this.initDB();
+                this.setupEventListeners();
+                this.checkConnection();
+                
+                // Verificar sessão
+                const savedUser = localStorage.getItem('jc_user');
+                if (savedUser) {
+                    this.currentUser = JSON.parse(savedUser);
+                    await this.carregarDados();
+                    this.showMainApp();
+                } else {
+                    this.carregarDadosDemo();
+                }
+            },
+            
+            // IndexedDB
+            initDB() {
+                return new Promise((resolve, reject) => {
+                    const request = indexedDB.open(DB_NAME, DB_VERSION);
+                    
+                    request.onerror = () => reject(request.error);
+                    request.onsuccess = () => {
+                        db = request.result;
+                        resolve();
+                    };
+                    
+                    request.onupgradeneeded = (event) => {
+                        const database = event.target.result;
+                        
+                        if (!database.objectStoreNames.contains('clientes')) {
+                            database.createObjectStore('clientes', { keyPath: 'id' });
+                        }
+                        if (!database.objectStoreNames.contains('produtos')) {
+                            database.createObjectStore('produtos', { keyPath: 'id' });
+                        }
+                        if (!database.objectStoreNames.contains('vendas')) {
+                            database.createObjectStore('vendas', { keyPath: 'id' });
+                        }
+                        if (!database.objectStoreNames.contains('pagamentos')) {
+                            database.createObjectStore('pagamentos', { keyPath: 'id' });
+                        }
+                        if (!database.objectStoreNames.contains('filaSync')) {
+                            database.createObjectStore('filaSync', { keyPath: 'id', autoIncrement: true });
+                        }
+                    };
+                });
+            },
+            
+            setupEventListeners() {
+                window.addEventListener('online', () => this.updateConnectionStatus(true));
+                window.addEventListener('offline', () => this.updateConnectionStatus(false));
+            },
+            
+            checkConnection() {
+                this.updateConnectionStatus(navigator.onLine);
+            },
+            
+            updateConnectionStatus(online) {
+                this.isOnline = online;
+                const statusEl = document.getElementById('connectionStatus');
+                const syncIcon = document.getElementById('syncStatusIcon');
+                const syncText = document.getElementById('syncStatusText');
+                const syncDesc = document.getElementById('syncStatusDesc');
+                
+                if (online) {
+                    statusEl.className = 'status-indicator status-online';
+                    statusEl.innerHTML = '🟢 Online';
+                    syncIcon.textContent = '🟢';
+                    syncText.textContent = 'Online';
+                    syncDesc.textContent = 'Sincronização automática ativa';
+                    this.tentarSincronizar();
+                } else {
+                    statusEl.className = 'status-indicator status-offline';
+                    statusEl.innerHTML = '🔴 Offline';
+                    syncIcon.textContent = '🔴';
+                    syncText.textContent = 'Offline';
+                    syncDesc.textContent = 'Trabalhando com dados locais';
+                }
+            },
+            
+            // Dados de demonstração
+            carregarDadosDemo() {
+                if (this.clientes.length === 0) {
+                    this.clientes = [
+                        { id: 1, nome: 'João Silva', telefone: '(11) 98765-4321', documento: '123.456.789-00', endereco: 'Rua A, 123', limite: 1000, prazo: 30, divida: 350 },
+                        { id: 2, nome: 'Maria Santos', telefone: '(11) 98765-4322', documento: '987.654.321-00', endereco: 'Rua B, 456', limite: 2000, prazo: 30, divida: 0 },
+                        { id: 3, nome: 'Pedro Costa', telefone: '(11) 98765-4323', documento: '456.789.123-00', endereco: 'Rua C, 789', limite: 500, prazo: 15, divida: 580 }
+                    ];
+                }
+                
+                if (this.produtos.length === 0) {
+                    this.produtos = [
+                        { id: 1, nome: 'Coca-Cola 2L', codigo: 'COCA002', quantidade: 50, custo: 4.50, preco: 7.99, minimo: 10 },
+                        { id: 2, nome: 'Pepsi 2L', codigo: 'PEPS002', quantidade: 35, custo: 4.20, preco: 6.99, minimo: 10 },
+                        { id: 3, nome: 'Guaraná Antarctica 2L', codigo: 'GUAR002', quantidade: 8, custo: 4.00, preco: 6.50, minimo: 15 },
+                        { id: 4, nome: 'Fanta Laranja 2L', codigo: 'FANT002', quantidade: 20, custo: 3.80, preco: 6.29, minimo: 10 }
+                    ];
+                }
+            },
+            
+            // Carregar dados do IndexedDB
+            async carregarDados() {
+                this.clientes = await this.getAllFromStore('clientes');
+                this.produtos = await this.getAllFromStore('produtos');
+                this.vendas = await this.getAllFromStore('vendas');
+                this.pagamentos = await this.getAllFromStore('pagamentos');
+                this.filaSync = await this.getAllFromStore('filaSync');
+                
+                if (this.clientes.length === 0) this.carregarDadosDemo();
+            },
+            
+            getAllFromStore(storeName) {
+                return new Promise((resolve, reject) => {
+                    const transaction = db.transaction([storeName], 'readonly');
+                    const store = transaction.objectStore(storeName);
+                    const request = store.getAll();
+                    
+                    request.onsuccess = () => resolve(request.result);
+                    request.onerror = () => reject(request.error);
+                });
+            },
+            
+            saveToStore(storeName, data) {
+                return new Promise((resolve, reject) => {
+                    const transaction = db.transaction([storeName], 'readwrite');
+                    const store = transaction.objectStore(storeName);
+                    const request = store.put(data);
+                    
+                    request.onsuccess = () => resolve();
+                    request.onerror = () => reject(request.error);
+                });
+            },
+            
+            deleteFromStore(storeName, id) {
+                return new Promise((resolve, reject) => {
+                    const transaction = db.transaction([storeName], 'readwrite');
+                    const store = transaction.objectStore(storeName);
+                    const request = store.delete(id);
+                    
+                    request.onsuccess = () => resolve();
+                    request.onerror = () => reject(request.error);
+                });
+            },
+            
+            // Autenticação
+            login() {
+                const email = document.getElementById('loginEmail').value;
+                const senha = document.getElementById('loginPassword').value;
+                
+                if (!email || !senha) {
+                    this.showToast('Preencha email e senha!');
+                    return;
+                }
+                
+                if (email === 'demo@jc.com' && senha === '123456') {
+                    this.currentUser = {
+                        nome: 'Administrador',
+                        email: email,
+                        empresa: 'JC Distribuidora'
+                    };
+                    this.salvarSessao();
+                    this.carregarDados().then(() => this.showMainApp());
+                    this.showToast('Login realizado com sucesso!');
+                } else {
+                    this.showToast('Email ou senha incorretos!');
+                }
+            },
+            
+            register() {
+                const empresa = document.getElementById('regCompany').value;
+                const nome = document.getElementById('regName').value;
+                const email = document.getElementById('regEmail').value;
+                const senha = document.getElementById('regPassword').value;
+                
+                if (!empresa || !nome || !email || !senha) {
+                    this.showToast('Preencha todos os campos!');
+                    return;
+                }
+                
+                if (senha.length < 6) {
+                    this.showToast('Senha deve ter no mínimo 6 caracteres!');
+                    return;
+                }
+                
+                this.currentUser = { nome, email, empresa };
+                this.salvarSessao();
+                this.showMainApp();
+                this.showToast('Conta criada com sucesso!');
+            },
+            
+            logout() {
+                localStorage.removeItem('jc_user');
+                this.currentUser = null;
+                location.reload();
+            },
+            
+            salvarSessao() {
+                localStorage.setItem('jc_user', JSON.stringify(this.currentUser));
+            },
+            
+            showLogin() {
+                document.getElementById('loginForm').classList.remove('hidden');
+                document.getElementById('registerForm').classList.add('hidden');
+            },
+            
+            showRegister() {
+                document.getElementById('loginForm').classList.add('hidden');
+                document.getElementById('registerForm').classList.remove('hidden');
+            },
+            
+            showMainApp() {
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('mainApp').classList.remove('hidden');
+                document.getElementById('userName').textContent = this.currentUser.nome;
+                
+                this.renderizarClientes();
+                this.renderizarProdutos();
+                this.atualizarSelectClientes();
+                this.atualizarSelectProdutos();
+                this.renderizarVendas();
+                this.atualizarDashboard();
+                this.renderizarCobrancas();
+                this.atualizarSyncPanel();
+            },
+            
+            // Navegação
+            navigate(tab) {
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                event.target.closest('.nav-tab').classList.add('active');
+                
+                document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+                document.getElementById(tab).classList.add('active');
+                
+                if (tab === 'dashboard') this.atualizarDashboard();
+                if (tab === 'cobrancas') this.renderizarCobrancas();
+                if (tab === 'sincronizar') this.atualizarSyncPanel();
+            },
+            
+            // Clientes
+            renderizarClientes() {
+                const lista = document.getElementById('listaClientes');
+                const busca = document.getElementById('searchCliente')?.value.toLowerCase() || '';
+                const filtroStatus = document.querySelector('.chip.active')?.textContent || 'Todos';
+                
+                let clientesFiltrados = this.clientes.filter(c => 
+                    c.nome.toLowerCase().includes(busca) || 
+                    c.telefone.includes(busca)
+                );
+                
+                if (filtroStatus === 'Devedores') {
+                    clientesFiltrados = clientesFiltrados.filter(c => (c.divida || 0) > 0);
+                } else if (filtroStatus === 'Adimplentes') {
+                    clientesFiltrados = clientesFiltrados.filter(c => (c.divida || 0) === 0);
+                }
+                
+                if (clientesFiltrados.length === 0) {
+                    lista.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">👥</div>
+                            <p>Nenhum cliente encontrado</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                lista.innerHTML = clientesFiltrados.map(c => {
+                    const divida = c.divida || 0;
+                    const percentual = Math.min((divida / c.limite) * 100, 100);
+                    let cardClass = '';
+                    let debtClass = '';
+                    
+                    if (divida > c.limite) {
+                        cardClass = 'danger';
+                        debtClass = 'debt-high';
+                    } else if (divida > c.limite * 0.7) {
+                        cardClass = 'warning';
+                        debtClass = 'debt-medium';
+                    } else if (divida > 0) {
+                        debtClass = 'debt-low';
+                    }
+                    
+                    return `
+                        <div class="client-card ${cardClass} animate-in">
+                            <div style="display: flex; justify-content: space-between; align-items: start;">
+                                <div>
+                                    <h3 style="font-size: 15px; margin-bottom: 3px;">${c.nome}</h3>
+                                    <p style="font-size: 12px; color: #666;">📞 ${c.telefone}</p>
+                                    <p style="font-size: 11px; color: #999; margin-top: 2px;">${c.endereco || 'Sem endereço'}</p>
+                                </div>
+                                <div class="item-actions">
+                                    <button class="btn-small btn-edit" onclick="app.editarCliente(${c.id})">✏️</button>
+                                    <button class="btn-small btn-delete" onclick="app.excluirCliente(${c.id})">🗑️</button>
+                                </div>
+                            </div>
+                            ${divida > 0 ? `
+                                <div style="margin-top: 10px;">
+                                    <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 3px;">
+                                        <span>Dívida: <strong>R$ ${divida.toFixed(2)}</strong></span>
+                                        <span>Limite: R$ ${c.limite.toFixed(2)}</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill ${percentual > 90 ? 'danger' : percentual > 70 ? 'warning' : ''}" 
+                                             style="width: ${percentual}%"></div>
+                                    </div>
+                                    <span class="debt-badge ${debtClass}">
+                                        ${percentual > 100 ? '⚠️ LIMITE EXCEDIDO' : percentual > 70 ? '⚡ Próximo do limite' : '✓ Regular'}
+                                    </span>
+                                </div>
+                            ` : '<span class="debt-badge debt-low" style="margin-top: 8px; display: inline-block;">✓ Sem pendências</span>'}
+                        </div>
+                    `;
+                }).join('');
+            },
+            
+            filtrarClientes() {
+                this.renderizarClientes();
+            },
+            
+            filtrarClientesStatus(status) {
+                document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+                event.target.classList.add('active');
+                this.renderizarClientes();
+            },
+            
+            async salvarCliente() {
+                const id = document.getElementById('clienteId').value;
+                const cliente = {
+                    id: id ? parseInt(id) : Date.now(),
+                    nome: document.getElementById('clienteNome').value,
+                    documento: document.getElementById('clienteDocumento').value,
+                    telefone: document.getElementById('clienteTelefone').value,
+                    endereco: document.getElementById('clienteEndereco').value,
+                    limite: parseFloat(document.getElementById('clienteLimite').value) || 500,
+                    prazo: parseInt(document.getElementById('clientePrazo').value) || 30,
+                    divida: 0
+                };
+                
+                if (!cliente.nome || !cliente.telefone) {
+                    this.showToast('Preencha nome e telefone!');
+                    return;
+                }
+                
+                if (id) {
+                    const index = this.clientes.findIndex(c => c.id === parseInt(id));
+                    cliente.divida = this.clientes[index].divida || 0;
+                    this.clientes[index] = cliente;
+                } else {
+                    this.clientes.push(cliente);
+                }
+                
+                await this.saveToStore('clientes', cliente);
+                await this.adicionarFilaSync('cliente', cliente);
+                
+                this.closeModal('clienteModal');
+                this.renderizarClientes();
+                this.atualizarSelectClientes();
+                this.showToast(id ? 'Cliente atualizado!' : 'Cliente cadastrado!');
+            },
+            
+            editarCliente(id) {
+                const cliente = this.clientes.find(c => c.id === id);
+                if (!cliente) return;
+                
+                document.getElementById('clienteId').value = cliente.id;
+                document.getElementById('clienteNome').value = cliente.nome;
+                document.getElementById('clienteDocumento').value = cliente.documento || '';
+                document.getElementById('clienteTelefone').value = cliente.telefone;
+                document.getElementById('clienteEndereco').value = cliente.endereco || '';
+                document.getElementById('clienteLimite').value = cliente.limite;
+                document.getElementById('clientePrazo').value = cliente.prazo;
+                
+                document.getElementById('clienteModalTitle').textContent = 'Editar Cliente';
+                this.openModal('clienteModal');
+            },
+            
+            async excluirCliente(id) {
+                if (!confirm('Tem certeza? Isso também removerá o histórico!')) return;
+                
+                this.clientes = this.clientes.filter(c => c.id !== id);
+                await this.deleteFromStore('clientes', id);
+                await this.adicionarFilaSync('delete_cliente', { id });
+                
+                this.renderizarClientes();
+                this.atualizarSelectClientes();
+                this.showToast('Cliente removido!');
+            },
+            
+            atualizarSelectClientes() {
+                const select = document.getElementById('selectCliente');
+                select.innerHTML = '<option value="">Cliente avulso...</option>' +
+                    this.clientes.map(c => 
+                        `<option value="${c.id}">${c.nome} ${c.divida > 0 ? `(Dívida: R$${c.divida.toFixed(2)})` : ''}</option>`
+                    ).join('');
+            },
+            
+            selecionarCliente() {
+                const id = parseInt(document.getElementById('selectCliente').value);
+                this.clienteSelecionado = this.clientes.find(c => c.id === id) || null;
+                
+                const infoDiv = document.getElementById('infoCliente');
+                if (this.clienteSelecionado) {
+                    document.getElementById('nomeClienteSelecionado').textContent = this.clienteSelecionado.nome;
+                    const disponivel = this.clienteSelecionado.limite - (this.clienteSelecionado.divida || 0);
+                    document.getElementById('limiteCliente').textContent = 
+                        `Limite: R$${this.clienteSelecionado.limite.toFixed(2)} | Disponível: R$${disponivel.toFixed(2)}`;
+                    infoDiv.classList.remove('hidden');
+                } else {
+                    infoDiv.classList.add('hidden');
+                }
+            },
+            
+            // Produtos
+            renderizarProdutos() {
+                const lista = document.getElementById('listaProdutos');
+                const busca = document.getElementById('searchProduto')?.value.toLowerCase() || '';
+                
+                const produtosFiltrados = this.produtos.filter(p => 
+                    p.nome.toLowerCase().includes(busca) || 
+                    p.codigo.toLowerCase().includes(busca)
+                );
+                
+                if (produtosFiltrados.length === 0) {
+                    lista.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📦</div>
+                            <p>Nenhum produto encontrado</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                lista.innerHTML = produtosFiltrados.map(p => `
+                    <div class="item-card animate-in">
+                        <div class="item-info">
+                            <h3>${p.nome}</h3>
+                            <p>Código: ${p.codigo} | Estoque: <span style="color: ${p.quantidade <= p.minimo ? '#ef4444' : '#059669'}; font-weight: bold;">${p.quantidade}</span></p>
+                            <p>Custo: R$${p.custo.toFixed(2)} | Venda: R$${p.preco.toFixed(2)}</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn-small btn-edit" onclick="app.editarProduto(${p.id})">✏️</button>
+                            <button class="btn-small btn-delete" onclick="app.excluirProduto(${p.id})">🗑️</button>
+                        </div>
+                    </div>
+                `).join('');
+            },
+            
+            filtrarProdutos() {
+                this.renderizarProdutos();
+            },
+            
+            async salvarProduto() {
+                const id = document.getElementById('produtoId').value;
+                const produto = {
+                    id: id ? parseInt(id) : Date.now(),
+                    nome: document.getElementById('produtoNome').value,
+                    codigo: document.getElementById('produtoCodigo').value || `PROD${Date.now()}`,
+                    quantidade: parseInt(document.getElementById('produtoQuantidade').value) || 0,
+                    custo: parseFloat(document.getElementById('produtoCusto').value) || 0,
+                    preco: parseFloat(document.getElementById('produtoPreco').value) || 0,
+                    minimo: parseInt(document.getElementById('produtoMinimo').value) || 10
+                };
+                
+                if (!produto.nome) {
+                    this.showToast('Preencha o nome do produto!');
+                    return;
+                }
+                
+                if (id) {
+                    const index = this.produtos.findIndex(p => p.id === parseInt(id));
+                    this.produtos[index] = produto;
+                } else {
+                    this.produtos.push(produto);
+                }
+                
+                await this.saveToStore('produtos', produto);
+                await this.adicionarFilaSync('produto', produto);
+                
+                this.closeModal('produtoModal');
+                this.renderizarProdutos();
+                this.atualizarSelectProdutos();
+                this.showToast(id ? 'Produto atualizado!' : 'Produto cadastrado!');
+            },
+            
+            editarProduto(id) {
+                const produto = this.produtos.find(p => p.id === id);
+                if (!produto) return;
+                
+                document.getElementById('produtoId').value = produto.id;
+                document.getElementById('produtoNome').value = produto.nome;
+                document.getElementById('produtoCodigo').value = produto.codigo;
+                document.getElementById('produtoQuantidade').value = produto.quantidade;
+                document.getElementById('produtoCusto').value = produto.custo;
+                document.getElementById('produtoPreco').value = produto.preco;
+                document.getElementById('produtoMinimo').value = produto.minimo;
+                
+                document.getElementById('produtoModalTitle').textContent = 'Editar Produto';
+                this.openModal('produtoModal');
+            },
+            
+            async excluirProduto(id) {
+                if (!confirm('Tem certeza que deseja excluir?')) return;
+                
+                this.produtos = this.produtos.filter(p => p.id !== id);
+                await this.deleteFromStore('produtos', id);
+                await this.adicionarFilaSync('delete_produto', { id });
+                
+                this.renderizarProdutos();
+                this.atualizarSelectProdutos();
+                this.showToast('Produto excluído!');
+            },
+            
+            atualizarSelectProdutos() {
+                const select = document.getElementById('selectProduto');
+                select.innerHTML = '<option value="">Selecione um produto...</option>' +
+                    this.produtos.filter(p => p.quantidade > 0).map(p => 
+                        `<option value="${p.id}">${p.nome} (R$ ${p.preco.toFixed(2)}) - ${p.quantidade} disp.</option>`
+                    ).join('');
+            },
+            
+            // Vendas
+            adicionarAoCarrinho() {
+                const select = document.getElementById('selectProduto');
+                const produtoId = parseInt(select.value);
+                
+                if (!produtoId) return;
+                
+                const produto = this.produtos.find(p => p.id === produtoId);
+                if (!produto) return;
+                
+                const itemExistente = this.carrinho.find(item => item.id === produtoId);
+                
+                if (itemExistente) {
+                    if (itemExistente.quantidade < produto.quantidade) {
+                        itemExistente.quantidade++;
+                    } else {
+                        this.showToast('Estoque insuficiente!');
+                        return;
+                    }
+                } else {
+                    this.carrinho.push({
+                        id: produto.id,
+                        nome: produto.nome,
+                        preco: produto.preco,
+                        custo: produto.custo,
+                        quantidade: 1
+                    });
+                }
+                
+                select.value = '';
+                this.renderizarCarrinho();
+            },
+            
+            renderizarCarrinho() {
+                const div = document.getElementById('carrinho');
+                const totalSection = document.getElementById('totalSection');
+                const btnFinalizar = document.getElementById('btnFinalizar');
+                
+                if (this.carrinho.length === 0) {
+                    div.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">Carrinho vazio</p>';
+                    totalSection.classList.add('hidden');
+                    btnFinalizar.disabled = true;
+                    return;
+                }
+                
+                let total = 0;
+                
+                div.innerHTML = this.carrinho.map((item, index) => {
+                    total += item.preco * item.quantidade;
+                    return `
+                        <div class="cart-item animate-in">
+                            <div>
+                                <strong>${item.nome}</strong>
+                                <p style="font-size: 12px; color: #666;">R$ ${item.preco.toFixed(2)} cada</p>
+                            </div>
+                            <div class="quantity-control">
+                                <button class="quantity-btn" onclick="app.alterarQuantidade(${index}, -1)">-</button>
+                                <span>${item.quantidade}</span>
+                                <button class="quantity-btn" onclick="app.alterarQuantidade(${index}, 1)">+</button>
+                                <button class="btn-small btn-delete" onclick="app.removerDoCarrinho(${index})">🗑️</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                document.getElementById('totalVenda').textContent = 'R$ ' + total.toFixed(2);
+                totalSection.classList.remove('hidden');
+                btnFinalizar.disabled = false;
+                
+                if (this.tipoPagamento === 'prazo') {
+                    this.calcularParcelas();
+                }
+            },
+            
+            alterarQuantidade(index, delta) {
+                const item = this.carrinho[index];
+                const produto = this.produtos.find(p => p.id === item.id);
+                
+                const novaQuantidade = item.quantidade + delta;
+                
+                if (novaQuantidade <= 0) {
+                    this.removerDoCarrinho(index);
+                    return;
+                }
+                
+                if (novaQuantidade > produto.quantidade) {
+                    this.showToast('Estoque insuficiente!');
+                    return;
+                }
+                
+                item.quantidade = novaQuantidade;
+                this.renderizarCarrinho();
+            },
+            
+            removerDoCarrinho(index) {
+                this.carrinho.splice(index, 1);
+                this.renderizarCarrinho();
+            },
+            
+            selecionarPagamento(tipo) {
+                this.tipoPagamento = tipo;
+                
+                document.querySelectorAll('.payment-option').forEach(el => el.classList.remove('selected'));
+                document.getElementById(tipo === 'avista' ? 'optAvista' : 'optPrazo').classList.add('selected');
+                
+                const parcelasDiv = document.getElementById('parcelamentoOptions');
+                if (tipo === 'prazo') {
+                    parcelasDiv.classList.remove('hidden');
+                    this.calcularParcelas();
+                } else {
+                    parcelasDiv.classList.add('hidden');
+                }
+            },
+            
+            calcularParcelas() {
+                const numParcelas = parseInt(document.getElementById('numParcelas').value) || 1;
+                let total = this.carrinho.reduce((sum, item) => sum + (item.preco * item.quantidade), 0);
+                const valorParcela = total / numParcelas;
+                
+                const preview = document.getElementById('previewParcelas');
+                preview.innerHTML = `
+                    <div style="background: #f0f4ff; padding: 10px; border-radius: 8px; margin-top: 10px;">
+                        <p style="font-size: 13px; color: #1e3a8a; font-weight: bold;">
+                            ${numParcelas}x de R$ ${valorParcela.toFixed(2)}
+                        </p>
+                        <p style="font-size: 11px; color: #666; margin-top: 3px;">
+                            Total: R$ ${total.toFixed(2)}
+                        </p>
+                    </div>
+                `;
+            },
+            
+            async finalizarVenda() {
+                if (this.carrinho.length === 0) return;
+                
+                const total = this.carrinho.reduce((sum, item) => sum + (item.preco * item.quantidade), 0);
+                
+                // Verificar limite do cliente se for a prazo
+                if (this.tipoPagamento === 'prazo' && this.clienteSelecionado) {
+                    const dividaAtual = this.clienteSelecionado.divida || 0;
+                    if (dividaAtual + total > this.clienteSelecionado.limite) {
+                        this.showToast('⚠️ Limite de crédito excedido!');
+                        return;
+                    }
+                }
+                
+                const numParcelas = this.tipoPagamento === 'prazo' ? 
+                    parseInt(document.getElementById('numParcelas').value) || 1 : 1;
+                
+                // Criar parcelas
+                const parcelas = [];
+                const hoje = new Date();
+                const valorParcela = total / numParcelas;
+                
+                for (let i = 0; i < numParcelas; i++) {
+                    const vencimento = new Date(hoje);
+                    vencimento.setDate(vencimento.getDate() + ((i + 1) * 30));
+                    
+                    parcelas.push({
+                        numero: i + 1,
+                        valor: valorParcela,
+                        vencimento: vencimento.toISOString().split('T')[0],
+                        pago: false,
+                        dataPagamento: null
+                    });
+                }
+                
+                const venda = {
+                    id: Date.now(),
+                    data: hoje.toISOString(),
+                    clienteId: this.clienteSelecionado?.id || null,
+                    clienteNome: this.clienteSelecionado?.nome || 'Cliente Avulso',
+                    itens: [...this.carrinho],
+                    total: total,
+                    tipoPagamento: this.tipoPagamento,
+                    numParcelas: numParcelas,
+                    parcelas: parcelas,
+                    status: numParcelas === 1 && this.tipoPagamento === 'avista' ? 'pago' : 'pendente'
+                };
+                
+                // Atualizar estoque
+                this.carrinho.forEach(item => {
+                    const produto = this.produtos.find(p => p.id === item.id);
+                    if (produto) {
+                        produto.quantidade -= item.quantidade;
+                        this.saveToStore('produtos', produto);
+                    }
+                });
+                
+                // Atualizar dívida do cliente
+                if (this.clienteSelecionado && this.tipoPagamento === 'prazo') {
+                    this.clienteSelecionado.divida = (this.clienteSelecionado.divida || 0) + total;
+                    await this.saveToStore('clientes', this.clienteSelecionado);
+                }
+                
+                this.vendas.push(venda);
+                await this.saveToStore('vendas', venda);
+                await this.adicionarFilaSync('venda', venda);
+                
+                // Limpar
+                this.carrinho = [];
+                this.clienteSelecionado = null;
+                document.getElementById('selectCliente').value = '';
+                document.getElementById('infoCliente').classList.add('hidden');
+                this.renderizarCarrinho();
+                this.renderizarProdutos();
+                this.renderizarVendas();
+                this.renderizarClientes();
+                this.atualizarSelectClientes();
+                this.atualizarDashboard();
+                
+                this.showToast(`✅ Venda finalizada! ${numParcelas > 1 ? numParcelas + 'x de R$' + valorParcela.toFixed(2) : 'R$' + total.toFixed(2)}`);
+            },
+            
+            renderizarVendas() {
+                const div = document.getElementById('historicoVendas');
+                const vendasRecentes = this.vendas.slice(-10).reverse();
+                
+                if (vendasRecentes.length === 0) {
+                    div.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📋</div>
+                            <p>Sem vendas registradas</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                div.innerHTML = vendasRecentes.map(v => `
+                    <div class="item-card animate-in" onclick="app.verDetalhesVenda(${v.id})" style="cursor: pointer;">
+                        <div class="item-info">
+                            <h3>${v.clienteNome}</h3>
+                            <p>${new Date(v.data).toLocaleString('pt-BR')}</p>
+                            <p style="font-size: 11px; color: #999;">
+                                ${v.itens.length} item(ns) • ${v.tipoPagamento === 'avista' ? '💵 À vista' : '💳 ' + v.numParcelas + 'x'}
+                            </p>
+                        </div>
+                        <div style="text-align: right;">
+                            <strong style="color: ${v.status === 'pago' ? '#059669' : '#f59e0b'}; font-size: 16px;">
+                                R$ ${v.total.toFixed(2)}
+                            </strong>
+                            <p style="font-size: 10px; color: #999; margin-top: 2px;">
+                                ${v.status === 'pago' ? '✓ Pago' : '⏳ Pendente'}
+                            </p>
+                        </div>
+                    </div>
+                `).join('');
+            },
+            
+            verDetalhesVenda(vendaId) {
+                const venda = this.vendas.find(v => v.id === vendaId);
+                if (!venda) return;
+                
+                const div = document.getElementById('vendaDetalhes');
+                div.innerHTML = `
+                    <div style="margin-bottom: 15px;">
+                        <p style="color: #666; font-size: 13px;">Cliente</p>
+                        <p style="font-weight: bold; font-size: 16px;">${venda.clienteNome}</p>
+                        <p style="font-size: 12px; color: #999;">${new Date(venda.data).toLocaleString('pt-BR')}</p>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <p style="color: #666; font-size: 13px; margin-bottom: 8px;">Produtos</p>
+                        ${venda.itens.map(item => `
+                            <div style="display: flex; justify-content: space-between; padding: 8px; background: #f9f9f9; border-radius: 6px; margin-bottom: 5px;">
+                                <span>${item.nome} (${item.quantidade}x)</span>
+                                <strong>R$ ${(item.preco * item.quantidade).toFixed(2)}</strong>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    ${venda.parcelas ? `
+                        <div style="margin-bottom: 15px;">
+                            <p style="color: #666; font-size: 13px; margin-bottom: 8px;">Parcelas</p>
+                            ${venda.parcelas.map(p => `
+                                <div class="parcel-card ${p.pago ? 'paid' : ''} ${!p.pago && new Date(p.vencimento) < new Date() ? 'overdue' : ''}">
+                                    <div class="parcel-info">
+                                        <div class="parcel-number">${p.numero}ª Parcela</div>
+                                        <div class="parcel-date">
+                                            ${p.pago ? '✓ Pago em ' + new Date(p.dataPagamento).toLocaleDateString('pt-BR') : 
+                                              'Vence em ' + new Date(p.vencimento).toLocaleDateString('pt-BR')}
+                                        </div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div class="parcel-value">R$ ${p.valor.toFixed(2)}</div>
+                                        ${!p.pago ? `
+                                            <button class="btn-small btn-pay" onclick="event.stopPropagation(); app.receberParcela(${venda.id}, ${p.numero})">
+                                                Receber
+                                            </button>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                    
+                    <div class="total-section">
+                        <p>Total da Venda</p>
+                        <h3>R$ ${venda.total.toFixed(2)}</h3>
+                    </div>
+                `;
+                
+                this.openModal('vendaModal');
+            },
+            
+            // Cobranças
+            mudarAbaCobranca(aba) {
+                this.abaCobranca = aba;
+                document.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
+                event.target.classList.add('active');
+                this.renderizarCobrancas();
+            },
+            
+            renderizarCobrancas() {
+                const div = document.getElementById('listaCobrancas');
+                const hoje = new Date();
+                hoje.setHours(0,0,0,0);
+                
+                let parcelas = [];
+                
+                this.vendas.forEach(v => {
+                    if (v.parcelas) {
+                        v.parcelas.forEach(p => {
+                            if (!p.pago) {
+                                const vencimento = new Date(p.vencimento);
+                                const status = vencimento < hoje ? 'atrasada' : 'pendente';
+                                
+                                if (this.abaCobranca === 'pendentes' && status === 'pendente') {
+                                    parcelas.push({ ...p, vendaId: v.id, clienteNome: v.clienteNome, total: v.total });
+                                } else if (this.abaCobranca === 'atrasadas' && status === 'atrasada') {
+                                    parcelas.push({ ...p, vendaId: v.id, clienteNome: v.clienteNome, total: v.total });
+                                }
+                            } else if (this.abaCobranca === 'recebidas' && p.pago) {
+                                parcelas.push({ ...p, vendaId: v.id, clienteNome: v.clienteNome, total: v.total });
+                            }
+                        });
+                    }
+                });
+                
+                // Ordenar
+                if (this.abaCobranca === 'atrasadas') {
+                    parcelas.sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento));
+                } else if (this.abaCobranca === 'pendentes') {
+                    parcelas.sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento));
+                } else {
+                    parcelas.sort((a, b) => new Date(b.dataPagamento) - new Date(a.dataPagamento));
+                }
+                
+                if (parcelas.length === 0) {
+                    div.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">${this.abaCobranca === 'recebidas' ? '✅' : '💳'}</div>
+                            <p>Nenhuma cobrança ${this.abaCobranca}</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                div.innerHTML = parcelas.map(p => {
+                    const vencimento = new Date(p.vencimento);
+                    const hoje = new Date();
+                    const diasAtraso = Math.floor((hoje - vencimento) / (1000 * 60 * 60 * 24));
+                    
+                    return `
+                        <div class="item-card animate-in ${p.pago ? '' : diasAtraso > 0 ? 'danger' : ''}" 
+                             style="${diasAtraso > 0 ? 'border-left: 4px solid #ef4444;' : ''}">
+                            <div class="item-info">
+                                <h3>${p.clienteNome}</h3>
+                                <p>${p.numero}ª parcela de ${p.total.toFixed(2)}</p>
+                                <p style="font-size: 11px; color: ${diasAtraso > 0 ? '#ef4444' : '#666'}; font-weight: ${diasAtraso > 0 ? 'bold' : 'normal'};">
+                                    ${p.pago ? '✓ Recebido em ' + new Date(p.dataPagamento).toLocaleDateString('pt-BR') :
+                                      diasAtraso > 0 ? `⚠️ Atrasado ${diasAtraso} dias` : 
+                                      'Vence ' + vencimento.toLocaleDateString('pt-BR')}
+                                </p>
+                            </div>
+                            <div style="text-align: right;">
+                                <strong style="color: ${p.pago ? '#059669' : diasAtraso > 0 ? '#ef4444' : '#f59e0b'}; font-size: 16px;">
+                                    R$ ${p.valor.toFixed(2)}
+                                </strong>
+                                ${!p.pago ? `
+                                    <button class="btn-small btn-pay" onclick="app.receberParcela(${p.vendaId}, ${p.numero})" style="margin-top: 5px;">
+                                        Receber
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            },
+            
+            receberParcela(vendaId, parcelaNumero) {
+                const venda = this.vendas.find(v => v.id === vendaId);
+                if (!venda) return;
+                
+                const parcela = venda.parcelas.find(p => p.numero === parcelaNumero);
+                if (!parcela) return;
+                
+                document.getElementById('receberParcelaId').value = parcelaNumero;
+                document.getElementById('receberVendaId').value = vendaId;
+                document.getElementById('valorRecebido').value = parcela.valor.toFixed(2);
+                document.getElementById('dataRecebimento').value = new Date().toISOString().split('T')[0];
+                
+                document.getElementById('receberInfo').innerHTML = `
+                    <p><strong>Cliente:</strong> ${venda.clienteNome}</p>
+                    <p><strong>Parcela:</strong> ${parcelaNumero} de ${venda.parcelas.length}</p>
+                    <p><strong>Vencimento:</strong> ${new Date(parcela.vencimento).toLocaleDateString('pt-BR')}</p>
+                `;
+                
+                this.openModal('receberModal');
+            },
+            
+            async confirmarRecebimento() {
+                const vendaId = parseInt(document.getElementById('receberVendaId').value);
+                const parcelaNumero = parseInt(document.getElementById('receberParcelaId').value);
+                const valor = parseFloat(document.getElementById('valorRecebido').value);
+                const data = document.getElementById('dataRecebimento').value;
+                const forma = document.getElementById('formaRecebimento').value;
+                const obs = document.getElementById('obsRecebimento').value;
+                
+                const venda = this.vendas.find(v => v.id === vendaId);
+                if (!venda) return;
+                
+                const parcela = venda.parcelas.find(p => p.numero === parcelaNumero);
+                parcela.pago = true;
+                parcela.dataPagamento = data;
+                parcela.valorRecebido = valor;
+                parcela.formaPagamento = forma;
+                parcela.observacoes = obs;
+                
+                // Verificar se todas as parcelas estão pagas
+                const todasPagas = venda.parcelas.every(p => p.pago);
+                if (todasPagas) {
+                    venda.status = 'pago';
+                }
+                
+                // Atualizar dívida do cliente
+                if (venda.clienteId) {
+                    const cliente = this.clientes.find(c => c.id === venda.clienteId);
+                    if (cliente) {
+                        cliente.divida = Math.max(0, (cliente.divida || 0) - valor);
+                        await this.saveToStore('clientes', cliente);
+                    }
+                }
+                
+                await this.saveToStore('vendas', venda);
+                await this.adicionarFilaSync('pagamento', { vendaId, parcelaNumero, valor, data });
+                
+                this.closeModal('receberModal');
+                this.renderizarCobrancas();
+                this.renderizarClientes();
+                this.atualizarDashboard();
+                this.showToast('✅ Pagamento registrado com sucesso!');
+            },
+            
+            // Dashboard
+            atualizarDashboard() {
+                const hoje = new Date().toDateString();
+                const vendasHoje = this.vendas.filter(v => new Date(v.data).toDateString() === hoje);
+                
+                let aReceber = 0;
+                this.vendas.forEach(v => {
+                    if (v.parcelas) {
+                        v.parcelas.forEach(p => {
+                            if (!p.pago) aReceber += p.valor;
+                        });
+                    }
+                });
+                
+                document.getElementById('statClientes').textContent = this.clientes.length;
+                document.getElementById('statProdutos').textContent = this.produtos.length;
+                document.getElementById('statVendasHoje').textContent = vendasHoje.length;
+                document.getElementById('statAReceber').textContent = 'R$' + aReceber.toFixed(0);
+                
+                // Alertas
+                const alertas = [];
+                const estoqueBaixo = this.produtos.filter(p => p.quantidade <= p.minimo);
+                if (estoqueBaixo.length > 0) {
+                    alertas.push(`⚠️ ${estoqueBaixo.length} produto(s) com estoque baixo`);
+                }
+                
+                const clientesInadimplentes = this.clientes.filter(c => (c.divida || 0) > c.limite);
+                if (clientesInadimplentes.length > 0) {
+                    alertas.push(`🚨 ${clientesInadimplentes.length} cliente(s) excederam o limite`);
+                }
+                
+                const hojeDate = new Date();
+                const parcelasAtrasadas = [];
+                this.vendas.forEach(v => {
+                    if (v.parcelas) {
+                        v.parcelas.forEach(p => {
+                            if (!p.pago && new Date(p.vencimento) < hojeDate) {
+                                parcelasAtrasadas.push(p);
+                            }
+                        });
+                    }
+                });
+                if (parcelasAtrasadas.length > 0) {
+                    alertas.push(`⏰ ${parcelasAtrasadas.length} parcela(s) em atraso`);
+                }
+                
+                const alertasDiv = document.getElementById('alertasDashboard');
+                if (alertas.length === 0) {
+                    alertasDiv.innerHTML = `
+                        <div class="empty-state" style="padding: 20px;">
+                            <div class="empty-state-icon">✅</div>
+                            <p style="font-size: 13px;">Nenhum alerta no momento</p>
+                        </div>
+                    `;
+                } else {
+                    alertasDiv.innerHTML = alertas.map(a => `
+                        <div style="padding: 10px; background: #fef3c7; border-radius: 8px; margin-bottom: 8px; font-size: 13px; color: #92400e;">
+                            ${a}
+                        </div>
+                    `).join('');
+                }
+                
+                // Últimas vendas
+                const ultimasDiv = document.getElementById('ultimasVendas');
+                const ultimas = this.vendas.slice(-5).reverse();
+                
+                if (ultimas.length === 0) {
+                    ultimasDiv.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🛒</div>
+                            <p>Sem vendas recentes</p>
+                        </div>
+                    `;
+                } else {
+                    ultimasDiv.innerHTML = ultimas.map(v => `
+                        <div class="item-card animate-in">
+                            <div class="item-info">
+                                <h3>${v.clienteNome}</h3>
+                                <p>${new Date(v.data).toLocaleString('pt-BR')}</p>
+                            </div>
+                            <div style="text-align: right;">
+                                <strong style="color: ${v.status === 'pago' ? '#059669' : '#f59e0b'};">
+                                    R$ ${v.total.toFixed(2)}
+                                </strong>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            },
+            
+            // Sincronização
+            async adicionarFilaSync(tipo, dados) {
+                const item = {
+                    id: Date.now(),
+                    tipo: tipo,
+                    dados: dados,
+                    timestamp: new Date().toISOString(),
+                    tentativas: 0
+                };
+                
+                this.filaSync.push(item);
+                await this.saveToStore('filaSync', item);
+                this.atualizarSyncPanel();
+                
+                if (this.isOnline) {
+                    this.tentarSincronizar();
+                }
+            },
+            
+            async tentarSincronizar() {
+                if (!this.isOnline || this.filaSync.length === 0) return;
+                
+                const statusEl = document.getElementById('connectionStatus');
+                statusEl.className = 'status-indicator status-sync';
+                statusEl.innerHTML = '🔄 Sincronizando...';
+                
+                // Simular sincronização com servidor
+                // Em produção, aqui seria uma chamada API real
+                
+                const sucessos = [];
+                for (const item of this.filaSync) {
+                    try {
+                        // Simular envio para servidor
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                        item.sincronizado = true;
+                        sucessos.push(item.id);
+                    } catch (e) {
+                        item.tentativas++;
+                    }
+                }
+                
+                // Remover itens sincronizados
+                for (const id of sucessos) {
+                    await this.deleteFromStore('filaSync', id);
+                }
+                this.filaSync = this.filaSync.filter(item => !sucessos.includes(item.id));
+                
+                this.atualizarSyncPanel();
+                this.updateConnectionStatus(this.isOnline);
+                
+                if (sucessos.length > 0) {
+                    this.showToast(`✅ ${sucessos.length} item(s) sincronizado(s)!`);
+                }
+            },
+            
+            sincronizarManual() {
+                if (!this.isOnline) {
+                    this.showToast('❌ Sem conexão com internet!');
+                    return;
+                }
+                this.tentarSincronizar();
+            },
+            
+            atualizarSyncPanel() {
+                document.getElementById('countClientes').textContent = `✓ ${this.clientes.length} sincronizados`;
+                document.getElementById('countProdutos').textContent = `✓ ${this.produtos.length} sincronizados`;
+                document.getElementById('countVendas').textContent = `✓ ${this.vendas.length} sincronizadas`;
+                
+                const pendentes = this.vendas.filter(v => v.status !== 'pago').length;
+                document.getElementById('countPagamentos').textContent = `✓ ${pendentes} pendentes`;
+                
+                const filaDiv = document.getElementById('filaSync');
+                if (this.filaSync.length === 0) {
+                    filaDiv.innerHTML = `
+                        <div class="empty-state" style="padding: 20px;">
+                            <div class="empty-state-icon">✅</div>
+                            <p style="font-size: 13px;">Tudo sincronizado!</p>
+                        </div>
+                    `;
+                } else {
+                    filaDiv.innerHTML = this.filaSync.map(item => `
+                        <div class="sync-item">
+                            <span style="font-size: 13px;">
+                                ${item.tipo === 'venda' ? '🛒' : item.tipo === 'cliente' ? '👤' : item.tipo === 'produto' ? '📦' : '💰'} 
+                                ${item.tipo}
+                            </span>
+                            <span class="sync-status ${item.tentativas > 0 ? 'sync-error' : 'sync-pending'}">
+                                ${item.tentativas > 0 ? '⚠️ Erro' : '⏳ Pendente'}
+                            </span>
+                        </div>
+                    `).join('');
+                }
+            },
+            
+            // Utilitários
+            openModal(modalId) {
+                document.getElementById(modalId).classList.add('active');
+                if (modalId === 'clienteModal') {
+                    document.getElementById('clienteModalTitle').textContent = 'Novo Cliente';
+                    this.limparFormCliente();
+                } else if (modalId === 'produtoModal') {
+                    document.getElementById('produtoModalTitle').textContent = 'Novo Produto';
+                    this.limparFormProduto();
+                }
+            },
+            
+            closeModal(modalId) {
+                document.getElementById(modalId).classList.remove('active');
+            },
+            
+            limparFormCliente() {
+                document.getElementById('clienteId').value = '';
+                document.getElementById('clienteNome').value = '';
+                document.getElementById('clienteDocumento').value = '';
+                document.getElementById('clienteTelefone').value = '';
+                document.getElementById('clienteEndereco').value = '';
+                document.getElementById('clienteLimite').value = '500';
+                document.getElementById('clientePrazo').value = '30';
+            },
+            
+            limparFormProduto() {
+                document.getElementById('produtoId').value = '';
+                document.getElementById('produtoNome').value = '';
+                document.getElementById('produtoCodigo').value = '';
+                document.getElementById('produtoQuantidade').value = '';
+                document.getElementById('produtoCusto').value = '';
+                document.getElementById('produtoPreco').value = '';
+                document.getElementById('produtoMinimo').value = '10';
+            },
+            
+            showToast(mensagem) {
+                const toast = document.getElementById('toast');
+                toast.textContent = mensagem;
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 3000);
+            }
+        };
+        
+        // Iniciar
+        document.addEventListener('DOMContentLoaded', () => {
+            app.init();
+        });
+    </script>
+</body>
+</html>
